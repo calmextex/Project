@@ -1,4 +1,4 @@
-TITLE Program Template     (template.asm)
+TITLE Project4   (Proj4.asm)
 
 ; Author: Abraham Zamora
 ; Last Modified: 2/25/2023
