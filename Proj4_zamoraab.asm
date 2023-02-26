@@ -12,6 +12,7 @@ INCLUDE Irvine32.inc
 
 MAX_PRIME = 200
 MIN_PRIME = 1
+MAX_COLUMN = 15
 
 
 .data
@@ -26,10 +27,14 @@ instruct	BYTE	"Enter the number offset primes to display [1 ... 200]: ", 0
 error		BYTE	"No primes for you! Number out of range. Try again.", 0
 
 outro		BYTE	"Results certified byte Abraham. Goodbye!", 0
+strSpace	BYTE	"	", 0	; adds three spaces to prime numbers for readability
 
 ; program variables
 
 userPrimes	DWORD	?	; users input for total number of primes
+startNumber	DWORD	2	; since 1 is not a prime number, we start at 2 and increase until total number of primes is satisfied
+compNumber	DWORD	2	; for every number, we start by dividing by 2 and increase
+colCounter	DWORD	0	; counter for number of columns
 
 
 
@@ -109,7 +114,63 @@ getUserData endp
 ; Show Primes numbers
 
 showPrimes PROC
+	mov		EAX, startNumber
+	mov		EBX, compNumber
+	mov		ECX, userPrimes
 
+_primeLoop:
+	cmp		EAX, EBX
+	JE		_isPrime
+	CDQ
+	div		EBX
+	cmp		EDX, 0
+	JE		_notPrime
+	inc		EBX
+	mov		EAX, startNumber
+	jmp		_primeLoop
+
+_notPrime:
+	inc		startNumber	
+	mov		EAX, startNumber
+	mov		EBX, compNumber
+	jmp		_primeLoop
+
+
+
+
+_isPrime:
+
+	CALL	WriteDec
+	mov		EDX, OFFSET	strSpace
+	call	WriteString
+	inc		colCounter
+	mov		EBX, colCounter
+	cmp		EBX, MAX_COLUMN
+	JE		_newRow
+	jmp		_resetStatus
+
+_resetStatus:
+
+
+	inc		startNumber
+	mov		EAX, startNumber
+	mov		compNumber, 2
+	mov		EBX, compNumber
+	LOOP	_primeLoop
+	ret
+
+_newRow:
+	call	CrLf
+	mov		colCounter, 0
+	jmp		_resetStatus
+
+
+
+
+
+	
+
+	
 
 showPrimes ENDP
 
@@ -120,6 +181,7 @@ showPrimes ENDP
 ;--------------------------
 
 farewell PROC
+	call CrLf
 	mov		EDX, OFFSET outro
 	call	WriteString
 	call	CrLf
