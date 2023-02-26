@@ -72,7 +72,14 @@ introduction PROC
 
 introduction ENDP
 
-; Get User data
+;--------------------------
+; getUserData procedure collects the number of prime numbers
+;	the user wants to consider.  The procedure checks to see
+;	if the number is within the min and max prime constants.
+;	If not within the min and max, the user will be given an
+;	error and asked to try again.
+;
+;--------------------------
 
 getUserData PROC
 
