@@ -17,7 +17,7 @@ INCLUDE Irvine32.inc
 
 MAX_PRIME = 4000	; set to 4000 for EC Part 2
 MIN_PRIME = 1
-MAX_COLUMN = 15		; set to get 15 columns per row
+MAX_COLUMN = 15		; set to get 15 columns per row for EC Part 2
 MAX_ROW = 20		; 20 rows max before the waitmsg appears for EC Part 2
 
 
