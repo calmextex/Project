@@ -1,8 +1,8 @@
-Microsoft (R) Macro Assembler Version 14.29.30147.0	    02/25/23 16:28:40
-#Program Template     (template.asm			     Page 1 - 1
+Microsoft (R) Macro Assembler Version 14.29.30147.0	    02/25/23 17:14:46
+Project4   (Proj4.asm					     Page 1 - 1
 
 
-				TITLE Program Template     (template.asm)
+				TITLE Project4   (Proj4.asm)
 
 				; Author: Abraham Zamora
 				; Last Modified: 2/25/2023
@@ -30,9 +30,11 @@ Microsoft (R) Macro Assembler Version 14.29.30147.0	    02/25/23 16:28:40
 			      C .LIST
 			      C 
 
-				; (insert macro definitions here)
 
-				; (insert constant definitions here)
+ = 000000C8			MAX_PRIME = 200
+ = 00000001			MIN_PRIME = 1
+
+
  00000000			.data
 
 				; String variables
@@ -103,6 +105,9 @@ Microsoft (R) Macro Assembler Version 14.29.30147.0	    02/25/23 16:28:40
 
 				; program variables
 
+ 00000119 00000000		userPrimes	DWORD	?	; users input for total number of primes
+
+
 
 
  00000000			.code
@@ -110,18 +115,22 @@ Microsoft (R) Macro Assembler Version 14.29.30147.0	    02/25/23 16:28:40
 
  00000000  E8 0000000F		call introduction
 
- 00000005  E8 00000041		call getUserData
+ 00000005  E8 00000042		call getUserData
 
- 0000000A  E8 0000003C		call showPrimes
+ 0000000A  E8 00000078		call showPrimes
 
- 0000000F  E8 00000037		call farewell
+ 0000000F  E8 0000007E		call farewell
 
  00000014			main ENDP
 
-				; Introduction Proc
+				;---------------------------------
+				; Procedure that introduces user to the program.
+				;
+				;---------------------------------
 
  00000014			introduction PROC
- 00000014  BA 00000000 R		mov		EDX, OFFSET greeting
+
+ 00000014  BA 00000000 R		mov		EDX, OFFSET greeting	
  00000019  E8 00000000 E		call	WriteString
  0000001E  E8 00000000 E		CALL	CrLf
  00000023  E8 00000000 E		CALL	CrLf
@@ -134,34 +143,69 @@ Microsoft (R) Macro Assembler Version 14.29.30147.0	    02/25/23 16:28:40
  0000003C  E8 00000000 E		call	WriteString
  00000041  E8 00000000 E		call	CrLf
  00000046  E8 00000000 E		call	CrLf
+ 0000004B  C3				ret
 
 
- 0000004B			introduction ENDP
+ 0000004C			introduction ENDP
 
 				; Get User data
 
- 0000004B			getUserData PROC
+ 0000004C			getUserData PROC
 
- 0000004B			getUserData endp
+ 0000004C			_validate:
+
+ 0000004C  BA 00000085 R		mov		EDX, OFFSET instruct
+ 00000051  E8 00000000 E		call	WriteString
+ 00000056  E8 00000000 E		call	ReadDec
+ 0000005B  A3 00000119 R		mov		userPrimes, EAX
+ 00000060  81 3D 00000119 R		cmp		userPrimes, MAX_PRIME
+	   000000C8
+ 0000006A  7F 0A			jg		_wrongNumber
+ 0000006C  83 3D 00000119 R		cmp		userPrimes, MIN_PRIME
+	   01
+ 00000073  7C 01			jl		_wrongNumber
+ 00000075  C3				ret
+
+
+
+ 00000076			_wrongNumber:
+
+ 00000076  BA 000000BD R		mov		EDX, OFFSET error
+ 0000007B  E8 00000000 E		call	WriteString
+ 00000080  E8 00000000 E		CALL	CrLf
+ 00000085  EB C5			jmp		_validate
+
+ 00000087			getUserData endp
 
 				; Show Primes numbers
 
- 0000004B			showPrimes PROC
+ 00000087			showPrimes PROC
+ 00000087  A1 00000119 R		mov		EAX, userPrimes
+ 0000008C  E8 00000000 E		CALL	WriteDec
+ 00000091  C3				ret
 
- 0000004B			showPrimes ENDP
 
- 0000004B			farewell PROC
- 0000004B  BA 000000F0 R		mov		EDX, OFFSET outro
- 00000050  E8 00000000 E		call	WriteString
- 00000055  E8 00000000 E		call	CrLf
+ 00000092			showPrimes ENDP
 
- 0000005A			farewell ENDP
+				;--------------------------
+				; Procedure that provides a farewell
+				;	to the user
+				;
+				;--------------------------
+
+ 00000092			farewell PROC
+ 00000092  BA 000000F0 R		mov		EDX, OFFSET outro
+ 00000097  E8 00000000 E		call	WriteString
+ 0000009C  E8 00000000 E		call	CrLf
+ 000000A1  C3				ret
+
+ 000000A2			farewell ENDP
 
 
 
 				END main
-Microsoft (R) Macro Assembler Version 14.29.30147.0	    02/25/23 16:28:40
-#Program Template     (template.asm			     Symbols 2 - 1
+Microsoft (R) Macro Assembler Version 14.29.30147.0	    02/25/23 17:14:46
+Project4   (Proj4.asm					     Symbols 2 - 1
 
 
 
@@ -254,8 +298,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000119 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 0000005A Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 0000011D Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000000A2 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -362,13 +406,15 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-farewell . . . . . . . . . . . .	P Near	 0000004B _TEXT	Length= 0000000F Public STDCALL
-getUserData  . . . . . . . . . .	P Near	 0000004B _TEXT	Length= 00000000 Public STDCALL
-introduction . . . . . . . . . .	P Near	 00000014 _TEXT	Length= 00000037 Public STDCALL
+farewell . . . . . . . . . . . .	P Near	 00000092 _TEXT	Length= 00000010 Public STDCALL
+getUserData  . . . . . . . . . .	P Near	 0000004C _TEXT	Length= 0000003B Public STDCALL
+  _validate  . . . . . . . . . .	L Near	 0000004C _TEXT	
+  _wrongNumber . . . . . . . . .	L Near	 00000076 _TEXT	
+introduction . . . . . . . . . .	P Near	 00000014 _TEXT	Length= 00000038 Public STDCALL
 main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000014 Public STDCALL
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
-showPrimes . . . . . . . . . . .	P Near	 0000004B _TEXT	Length= 00000000 Public STDCALL
+showPrimes . . . . . . . . . . .	P Near	 00000087 _TEXT	Length= 0000000B Public STDCALL
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 
 
@@ -458,6 +504,7 @@ KEY_EVENT  . . . . . . . . . . .	Number	 00000001h
 KEY_MASKS  . . . . . . . . . . .	Number	 0000001Fh   
 LEFT_ALT_PRESSED . . . . . . . .	Number	 00000002h   
 LEFT_CTRL_PRESSED  . . . . . . .	Number	 00000008h   
+MAX_PRIME  . . . . . . . . . . .	Number	 000000C8h   
 MB_ABORTRETRYIGNORE  . . . . . .	Number	 00000002h   
 MB_APPLMODAL . . . . . . . . . .	Number	 00000000h   
 MB_CANCELTRYCONTINUE . . . . . .	Number	 00000006h   
@@ -483,6 +530,7 @@ MB_USERICON  . . . . . . . . . .	Number	 00000080h
 MB_YESNOCANCEL . . . . . . . . .	Number	 00000003h   
 MB_YESNO . . . . . . . . . . . .	Number	 00000004h   
 MENU_EVENT . . . . . . . . . . .	Number	 00000008h   
+MIN_PRIME  . . . . . . . . . . .	Number	 00000001h   
 MOUSE_EVENT  . . . . . . . . . .	Number	 00000002h   
 MessageBox . . . . . . . . . . .	Text   	 MessageBoxA
 NULL . . . . . . . . . . . . . .	Number	 00000000h   
@@ -606,6 +654,7 @@ lightRed . . . . . . . . . . . .	Number	 0000000Ch
 magenta  . . . . . . . . . . . .	Number	 00000005h   
 outro  . . . . . . . . . . . . .	Byte	 000000F0 _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
+userPrimes . . . . . . . . . . .	DWord	 00000119 _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA
 yellow . . . . . . . . . . . . .	Number	 0000000Eh   

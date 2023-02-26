@@ -29,6 +29,9 @@ outro		BYTE	"Results certified byte Abraham. Goodbye!", 0
 
 ; program variables
 
+userPrimes	DWORD	?	; users input for total number of primes
+
+
 
 
 .code
@@ -64,6 +67,7 @@ introduction PROC
 	call	WriteString
 	call	CrLf
 	call	CrLf
+	ret
 
 
 introduction ENDP
@@ -72,11 +76,33 @@ introduction ENDP
 
 getUserData PROC
 
+_validate:
+
+	mov		EDX, OFFSET instruct
+	call	WriteString
+	call	ReadDec
+	mov		userPrimes, EAX
+	cmp		userPrimes, MAX_PRIME
+	jg		_wrongNumber
+	cmp		userPrimes, MIN_PRIME
+	jl		_wrongNumber
+	ret
+
+
+
+_wrongNumber:
+
+	mov		EDX, OFFSET error
+	call	WriteString
+	CALL	CrLf
+	jmp		_validate
+
 getUserData endp
 
 ; Show Primes numbers
 
 showPrimes PROC
+
 
 showPrimes ENDP
 
@@ -90,6 +116,7 @@ farewell PROC
 	mov		EDX, OFFSET outro
 	call	WriteString
 	call	CrLf
+	ret
 
 farewell ENDP
 
